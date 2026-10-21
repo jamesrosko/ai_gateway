@@ -19,6 +19,7 @@ class Check:
     name: str
     capability: str
     fn: Callable[[GatewayClient, str], None]
+    models: tuple[str, ...] = ("*",)  # fnmatch patterns of model names this check applies to
 
 
 CHECKS: list[Check] = []

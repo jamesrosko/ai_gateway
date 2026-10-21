@@ -1,3 +1,4 @@
+import fnmatch
 import time
 import traceback
 from dataclasses import dataclass
@@ -31,6 +32,8 @@ def plan(
         caps = available.get(name, set())
         for chk in checks or CHECKS:
             if capabilities and chk.capability not in (*capabilities, "*"):
+                continue
+            if not any(fnmatch.fnmatch(name, pat) for pat in chk.models):
                 continue
             if chk.capability == "*" or chk.capability in caps:
                 pairs.append((name, chk))

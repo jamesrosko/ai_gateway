@@ -5,6 +5,8 @@ import sys
 
 from ai_gateway_client import GatewayClient
 
+from .checks import CHECKS
+from .golden import DEFAULT_DIR, load_checks
 from .runner import run_checks
 
 
@@ -14,11 +16,13 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--api-key", default=os.environ.get("AI_GATEWAY_API_KEY"))
     p.add_argument("--model", action="append", help="model to test (repeatable; default: all)")
     p.add_argument("--capability", action="append", help="only this endpoint (repeatable)")
+    p.add_argument("--golden-dir", default=str(DEFAULT_DIR), help="golden cases dir; empty to skip")
     p.add_argument("--json", action="store_true", help="emit JSON results")
     a = p.parse_args(argv)
 
     with GatewayClient(a.url, api_key=a.api_key) as client:
-        results = run_checks(client, models=a.model, capabilities=a.capability)
+        checks = [*CHECKS, *(load_checks(a.golden_dir) if a.golden_dir else [])]
+        results = run_checks(client, models=a.model, capabilities=a.capability, checks=checks)
 
     if a.json:
         print(json.dumps([r.__dict__ for r in results], indent=2))

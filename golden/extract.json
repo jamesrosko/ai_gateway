@@ -1,0 +1,41 @@
+{
+  "capability": "extract",
+  "cases": [
+    {
+      "id": "email-and-number",
+      "models": ["mock"],
+      "request": {"document": "Contact bob@example.com about invoice 42.", "entity_types": ["EMAIL", "NUMBER"]},
+      "expect": {
+        "include": [{"type": "EMAIL", "text": "bob@example.com"}, {"type": "NUMBER", "text": "42"}],
+        "count": 2
+      }
+    },
+    {
+      "id": "email-only-filter",
+      "models": ["mock"],
+      "request": {"document": "Contact bob@example.com about invoice 42.", "entity_types": ["EMAIL"]},
+      "expect": {"count": 1, "exclude_types": ["NUMBER"]}
+    },
+    {
+      "id": "people-orgs-places",
+      "models": ["llm*"],
+      "request": {
+        "document": "Satya Nadella is the CEO of Microsoft, which is headquartered in Redmond.",
+        "entity_types": ["PERSON", "ORG", "LOCATION"]
+      },
+      "expect": {
+        "include": [
+          {"type": "PERSON", "text": "Satya Nadella"},
+          {"type": "ORG", "text": "Microsoft"},
+          {"type": "LOCATION", "text": "Redmond"}
+        ]
+      }
+    },
+    {
+      "id": "email-extraction",
+      "models": ["llm*"],
+      "request": {"document": "Please reach me at jane.doe@example.org before Friday.", "entity_types": ["EMAIL"]},
+      "expect": {"include": [{"type": "EMAIL", "text": "jane.doe@example.org"}]}
+    }
+  ]
+}

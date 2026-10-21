@@ -1,0 +1,23 @@
+{
+  "capability": "embed",
+  "cases": [
+    {
+      "id": "mock-dim",
+      "models": ["mock"],
+      "request": {"input": ["a", "b", "c"]},
+      "expect": {"dim": 8, "count": 3}
+    },
+    {
+      "id": "semantic-similarity",
+      "models": ["llm*"],
+      "request": {
+        "input": [
+          "The cat sat on the mat.",
+          "A kitten rests on a rug.",
+          "Quarterly revenue grew 12% year over year."
+        ]
+      },
+      "expect": {"count": 3, "closer": {"anchor": 0, "near": 1, "far": 2}}
+    }
+  ]
+}

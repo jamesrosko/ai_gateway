@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
 
 from . import schemas as s
-from .backends import NotSupported, Registry, load_registry
+from .backends import NotSupported, Registry, UpstreamError, load_registry
 
 
 def create_app(registry: Registry | None = None) -> FastAPI:
@@ -32,6 +32,8 @@ def create_app(registry: Registry | None = None) -> FastAPI:
             res = await getattr(backend, capability)(req)
         except NotSupported as e:
             return err(501, "not_supported", str(e))
+        except UpstreamError as e:
+            return err(502, "upstream_error", str(e))
         except ValueError as e:
             return err(422, "invalid_request", str(e))
         res.model = name

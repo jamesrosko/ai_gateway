@@ -13,6 +13,10 @@ class NotSupported(Exception):
     pass
 
 
+class UpstreamError(Exception):
+    """The underlying model/service failed or returned something unusable (HTTP 502)."""
+
+
 _CAPABILITIES = ("generate", "embed", "classify", "extract", "decide", "predict")
 
 

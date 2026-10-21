@@ -65,6 +65,18 @@ class GatewayClient:
     def _body(**kw) -> dict[str, Any]:
         return {k: v for k, v in kw.items() if v is not None}
 
+    def call(self, capability: str, payload: dict[str, Any]):
+        """Raw call with a JSON body, returning the typed response. Used by golden cases."""
+        out = {
+            "generate": s.GenerateResponse,
+            "embed": s.EmbedResponse,
+            "classify": s.ClassifyResponse,
+            "extract": s.ExtractResponse,
+            "decide": s.DecideResponse,
+            "predict": s.PredictResponse,
+        }[capability]
+        return self._post(f"/v1/{capability}", payload, out)
+
     # -- endpoints -------------------------------------------------------------
 
     def models(self) -> list[dict[str, Any]]:

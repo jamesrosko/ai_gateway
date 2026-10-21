@@ -1,0 +1,38 @@
+{
+  "capability": "classify",
+  "cases": [
+    {
+      "id": "mock-respects-labels",
+      "models": ["mock"],
+      "request": {"text": "anything", "labels": ["a", "b", "c"]},
+      "expect": {"labels_subset_of": ["a", "b", "c"]}
+    },
+    {
+      "id": "sentiment-positive",
+      "models": ["llm*"],
+      "request": {
+        "text": "I absolutely love this, it works perfectly and made my day!",
+        "labels": ["positive", "negative", "neutral"]
+      },
+      "expect": {"top_label_in": ["positive"], "labels_subset_of": ["positive", "negative", "neutral"]}
+    },
+    {
+      "id": "sentiment-negative",
+      "models": ["llm*"],
+      "request": {
+        "text": "Terrible experience. It broke after one day and support ignored me.",
+        "labels": ["positive", "negative", "neutral"]
+      },
+      "expect": {"top_label_in": ["negative"]}
+    },
+    {
+      "id": "topic-routing",
+      "models": ["llm*"],
+      "request": {
+        "text": "My credit card was charged twice for the same order.",
+        "labels": ["billing", "shipping", "technical"]
+      },
+      "expect": {"top_label_in": ["billing"]}
+    }
+  ]
+}

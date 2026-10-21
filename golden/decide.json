@@ -1,0 +1,41 @@
+{
+  "capability": "decide",
+  "cases": [
+    {
+      "id": "mock-within-options",
+      "models": ["mock"],
+      "request": {"facts": {"amount": 10}, "options": ["approve", "review", "reject"]},
+      "expect": {"decision_in": ["approve", "review", "reject"], "min_reasons": 1}
+    },
+    {
+      "id": "obvious-approve",
+      "models": ["llm*"],
+      "request": {
+        "facts": {
+          "task": "refund request",
+          "order_total_usd": 12.5,
+          "customer_tenure_years": 6,
+          "prior_refunds": 0,
+          "policy": "auto-approve refunds under 50 USD for customers with no prior refunds"
+        },
+        "options": ["approve", "escalate", "reject"]
+      },
+      "expect": {"decision_in": ["approve"], "min_score": 0.5, "min_reasons": 1}
+    },
+    {
+      "id": "outside-return-window",
+      "models": ["llm*"],
+      "request": {
+        "facts": {
+          "task": "refund request",
+          "order_total_usd": 900,
+          "days_since_purchase": 400,
+          "return_window_days": 30,
+          "policy": "reject refunds outside the return window"
+        },
+        "options": ["approve", "escalate", "reject"]
+      },
+      "expect": {"decision_in": ["reject", "escalate"], "min_reasons": 1}
+    }
+  ]
+}

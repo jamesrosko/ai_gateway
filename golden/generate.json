@@ -1,0 +1,44 @@
+{
+  "capability": "generate",
+  "cases": [
+    {
+      "id": "mock-echo",
+      "models": ["mock"],
+      "request": {"messages": [{"role": "user", "content": "hello world"}]},
+      "expect": {"equals": "echo: hello world"}
+    },
+    {
+      "id": "capital-of-france",
+      "models": ["llm*"],
+      "request": {
+        "messages": [{"role": "user", "content": "What is the capital of France? Answer in one word."}],
+        "temperature": 0,
+        "max_tokens": 1024
+      },
+      "expect": {"contains": ["paris"]}
+    },
+    {
+      "id": "follows-system-prompt",
+      "models": ["llm*"],
+      "request": {
+        "messages": [
+          {"role": "system", "content": "Reply with exactly the single word BANANA and nothing else."},
+          {"role": "user", "content": "Hello!"}
+        ],
+        "temperature": 0,
+        "max_tokens": 1024
+      },
+      "expect": {"contains": ["banana"]}
+    },
+    {
+      "id": "respects-max-tokens",
+      "models": ["llm*"],
+      "request": {
+        "messages": [{"role": "user", "content": "Write a long story about a dragon."}],
+        "temperature": 0,
+        "max_tokens": 10
+      },
+      "expect": {"max_completion_tokens": 10}
+    }
+  ]
+}

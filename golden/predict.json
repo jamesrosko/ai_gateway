@@ -1,0 +1,11 @@
+{
+  "capability": "predict",
+  "cases": [
+    {
+      "id": "mock-identity",
+      "models": ["mock"],
+      "request": {"inputs": [{"name": "x", "shape": [2, 2], "datatype": "FP32", "data": [1.0, 2.0, 3.0, 4.0]}]},
+      "expect": {"outputs": {"x": {"shape": [2, 2], "data": [1.0, 2.0, 3.0, 4.0]}}}
+    }
+  ]
+}

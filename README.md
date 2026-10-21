@@ -66,3 +66,21 @@ gateway-harness --url http://host:8000 --capability embed --json   # standalone 
 ```
 
 Add checks with `@check("<capability>")` in `checks.py`, or in your own module.
+
+## Real model backend + golden data
+
+`backends/openai_compat.py` talks to any OpenAI-compatible server (Ollama by default). It
+implements `generate` (with streaming), `embed` (if `embed_model` is set), and `classify` /
+`extract` / `decide` via JSON-only prompts at temperature 0. `predict` is not implemented.
+Upstream failures surface as HTTP 502.
+
+```powershell
+$env:AI_GATEWAY_CONFIG = "gateway.llm.toml"   # edit model names to match what you have pulled
+pytest --gateway-model llm
+```
+
+Golden cases live in `golden/<endpoint>.json` as `{request, expect}` pairs. A case's `models`
+field is a list of fnmatch patterns (`"mock"`, `"llm*"`), so deterministic cases target the mock
+and tolerant ones (membership, containment, thresholds) target real models. Both pytest and
+`gateway-harness` load them automatically (`--golden-dir` to change). Supported `expect` keys
+are in `ai_gateway_harness/golden.py`.

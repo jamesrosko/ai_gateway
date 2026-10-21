@@ -1,0 +1,13 @@
+# Mock + a real model via an OpenAI-compatible server (default: local Ollama).
+#   ollama pull qwen3:4b
+#   $env:AI_GATEWAY_CONFIG = "gateway.llm.toml"; ai-gateway
+# Model names starting with "llm" run the LLM golden cases.
+
+[models.mock]
+backend = "ai_gateway.backends.mock:MockBackend"
+
+[models.llm]
+backend = "ai_gateway.backends.openai_compat:OpenAICompatBackend"
+options = { base_url = "http://localhost:11434/v1", model = "qwen3:4b" }  # add embed_model = "nomic-embed-text" (after ollama pull) to enable /v1/embed
+# For OpenAI itself: base_url = "https://api.openai.com/v1", api_key = "sk-...",
+# model = "gpt-4o-mini", embed_model = "text-embedding-3-small"
