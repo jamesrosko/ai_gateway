@@ -1,0 +1,7 @@
+# Model registry. Each entry maps a public model name to a backend class.
+# Swap `backend` for your own implementation (a "module:Class" import path);
+# `options` is passed to the constructor as keyword arguments.
+
+[models.mock]
+backend = "ai_gateway.backends.mock:MockBackend"
+options = {}
